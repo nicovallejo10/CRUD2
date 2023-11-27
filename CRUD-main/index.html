@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drugstore CRUD</title>
+    <link rel="stylesheet" href="style.css">
+    
+<body>
+
+    <h2>Drugstore </h2>
+    <br>
+    <form id="drugstoreForm">
+        <label for="productName">Nombre del Producto:</label>
+        <input type="text" id="productName" required>
+
+        <label for="price">Precio:</label>
+        <input type="number" id="price" required>
+
+        <input type="hidden" id="productId">
+
+        <button type="button" onclick="addOrUpdateProduct()">Agregar</button>
+    </form>
+    <br>
+    <table id="productTable">
+        <tr>
+            <th >Nombre del Producto</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+    </table>
+    <br>
+    <script>
+        function addOrUpdateProduct() {
+            var productName = document.getElementById('productName').value;
+            var price = document.getElementById('price').value;
+            var productId = document.getElementById('productId').value;
+
+            if (productName && price) {
+                if (productId) {
+                    updateProduct(productId, productName, price);
+                } else {
+                    addProduct(productName, price);
+                }
+
+                document.getElementById('productName').value = '';
+                document.getElementById('price').value = '';
+                document.getElementById('productId').value = '';
+                document.querySelector('button').innerText = 'Agregar Producto';
+            } else {
+                alert('Por favor, completa todos los campos.');
+            }
+        }
+
+        function addProduct(productName, price) {
+            var table = document.getElementById('productTable');
+            var newRow = table.insertRow(table.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+
+            cell1.innerHTML = productName;
+            cell2.innerHTML = price;
+            cell3.innerHTML = '<button type="button" onclick="editProduct(this)">Modificar</button>' +
+                              ' <button type="button" onclick="deleteRow(this)">Eliminar</button>';
+        }
+
+        function editProduct(button) {
+            var row = button.parentNode.parentNode;
+            var productName = row.cells[0].innerText;
+            var price = row.cells[1].innerText;
+
+            document.getElementById('productName').value = productName;
+            document.getElementById('price').value = price;
+            document.getElementById('productId').value = row.rowIndex;
+
+            document.querySelector('button').innerText = 'Modificar Producto';
+        }
+
+        function updateProduct(rowId, productName, price) {
+            var table = document.getElementById('productTable');
+            var row = table.rows[rowId];
+
+            row.cells[0].innerText = productName;
+            row.cells[1].innerText = price;
+        }
+
+        function deleteRow(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+    </script>
+
+</body>
+</html>
